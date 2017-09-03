@@ -147,4 +147,4 @@ def bad_request(e):
 
 if __name__ == "__main__":
     app.secret_key = os.environ["SECRET_KEY"]
-    app.run(debug=True)
+    app.run()
