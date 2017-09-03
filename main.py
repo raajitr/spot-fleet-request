@@ -1,21 +1,24 @@
-from flask import Flask, render_template, redirect, url_for, request, session, flash
-from flask_pymongo import PyMongo
 import bcrypt
 import gc
 from functools import wraps
-from spot_instances import SpotInstantiate
-import instances_defs
 import os
 
-app = Flask(__name__)
-app.secret_key = os.environ["SECRET_KEY"]
+from flask import Flask, render_template, redirect, url_for, request, session, flash
+from flask_pymongo import PyMongo
 
-app.config['MONGO_DBNAME'] = 'aws_config'
-app.config['MONGO_URI'] = 'mongodb://raajit:alchemist1@ds119524.mlab.com:19524/aws_config'
+import instances_defs
+from spot_instances import SpotInstantiate
+
+app = Flask(__name__)
+app.secret_key = os.environ['SECRET_KEY']
+
+# MongoDB hosted by mLabs
+app.config['MONGO_DBNAME'] = os.environ['MONGO_DBNAME']
+app.config['MONGO_URI'] = os.environ['MONGO_URI']
 
 mongo = PyMongo(app)
 
-
+# decorator to be used for redirecting to login page if not logged in
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -25,18 +28,21 @@ def login_required(f):
         return redirect(url_for('index'))
     return wrap
 
+# index route
 @app.route('/')
 def index():
     if 'logged_in' in session:
         return redirect(url_for('dashboard'))
     return redirect(url_for('login'))
 
+# Dashboard
 @app.route('/dashboard/')
 @login_required
 def dashboard():
     if 'access_key_id' not in session:
         return redirect(url_for('config'))
 
+    # get request ids using the User's config credentials
     fleet_request_ids = SpotInstantiate(session['access_key_id'], session['secret_key']).describe_request()
 
     if 'error' in fleet_request_ids:
@@ -47,6 +53,7 @@ def dashboard():
                             types_of_instances = instances_defs.types_of_instances,
                             fleet_request_ids = fleet_request_ids)
 
+# Config
 @app.route('/config/', methods=['GET', 'POST'])
 @login_required
 def config():
@@ -55,6 +62,7 @@ def config():
         session['access_key_id'] = request.form['accesskeyid']
         session['secret_key'] = request.form['secretkey']
 
+        # authenticate's the AWS credentials
         is_authenticated = SpotInstantiate(session['access_key_id'], session['secret_key']).authenticate()
 
         if is_authenticated:
@@ -63,6 +71,7 @@ def config():
 
     return render_template("config_page.html")
 
+# Launch Fleet Post Request
 @app.route('/launch_fleet/', methods=['POST'])
 def launch_fleet():
     fleet_request = {
@@ -73,6 +82,7 @@ def launch_fleet():
         'arn': session['arn'],
         'ami_id': request.form['ami_id']
     }
+    # request spot fleet
     request_status = SpotInstantiate(session['access_key_id'], session['secret_key'])._request_spot_fleet(fleet_request)
 
     if 'error' in request_status:
@@ -80,9 +90,10 @@ def launch_fleet():
 
     return redirect(url_for('dashboard'))
 
+# Cancel Fleet Request
 @app.route('/cancel_request/<request_id>', methods=['POST'])
 def cancel_request(request_id):
-
+    # Cancels request as per the request id
     request_status = SpotInstantiate(session['access_key_id'], session['secret_key']).cancel_request(request_id)
 
     if request_status:
@@ -94,8 +105,10 @@ def cancel_request(request_id):
 @app.route('/register/', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
+        # Connecting to users collection stored in database
         users = mongo.db.users
-        existing_user = users.find_one({'name': request.form['username']})
+        # get user's query filtered by name
+        existing_user = users.find_one({'username': request.form['username']})
 
         if existing_user is None:
             hashpass = bcrypt.hashpw(request.form['password'].encode('utf8'), bcrypt.gensalt())
@@ -107,7 +120,7 @@ def register():
             session['logged_in'] = True
             session['username'] = request.form['username']
             return redirect(url_for('config'))
-        # else
+        # if above doesn't checks out then the username already exists
         flash('That username already exists')
     return render_template('register.html')
 
@@ -141,10 +154,5 @@ def logout():
 def page_not_found(e):
     return '404'
 
-@app.errorhandler(400)
-def bad_request(e):
-    return e
-
 if __name__ == "__main__":
-    app.secret_key = os.environ["SECRET_KEY"]
     app.run()
