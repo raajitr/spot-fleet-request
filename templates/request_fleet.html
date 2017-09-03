@@ -1,0 +1,46 @@
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Launch Fleet</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Request Fleet of Spot Instances</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/launch_fleet/" method="post">
+          <div class="form-group">
+            <label for="recipient-name" class="form-control-label" >Fleet Size</label>
+            <input class="form-control" type="number" name="fleet_size" value="1" min="1" id="example-number-input">
+          </div>
+          <div class="form-group">
+              <label for="exampleSelect1">Type of Instance</label>
+              <select name="instance_type" class="form-control" id="exampleSelect1">
+                {% for type in types_of_instances %}
+                    <option>{{ type }}</option>
+                {% endfor %}
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="form-control-label">AMI ID - <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html" target="_blank">This</a> might help</label>
+            <input type="text" class="form-control" id="message-text" name="ami_id"></input>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="form-control-label">Max Price</label>
+            <input type="text" class="form-control" id="message-text" placeholder="$" name="price"></input>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Go</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+<button  type="button" class="btn btn-link " style="margin-left: 1.5%">
+  <a href="/dashboard/"> Refresh </a>
+</button>

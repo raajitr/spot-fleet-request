@@ -1,0 +1,22 @@
+{% extends 'index.html' %}
+
+{% block body %}
+<div class="container">
+    <form class="form-signin" style="max-width: 440px" method="post">
+        <h2 class="form-signin-heading">Enter Your AWS credentials</h2>
+        <label for="accesskeyid" class="sr-only">Access Key Id</label>
+        <input type="text" class="form-control" placeholder="Access Key" name="accesskeyid" {% if session.access_key_id %} value="{{ session.access_key_id }}" {% endif %} required >
+        <label for="secretkey" class="sr-only">Secret Access Key</label>
+        <input type="text" class="form-control" name="secretkey" placeholder="Secret Key" {% if session.secret_key %} value="{{ session.secret_key }}" {% endif %} required>
+        <div style="margin-top: 5%">
+        <a href="http://docs.aws.amazon.com/batch/latest/userguide/spot_fleet_IAM_role.html" target="_blank">IAM Fleet Role</a>
+        <label for="arn" class="sr-only">Enter Arn</label>
+        <input type="text" class="form-control" name="arn" placeholder="Fleet Role ARN, e.g, arn:aws:iam::1234:role/my-fleet-role" {% if session.arn %} value="{{ session.arn }}" {% endif %} required>
+        </div>
+        <div style="margin-top: 5%">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Done</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

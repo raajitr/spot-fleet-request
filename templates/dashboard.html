@@ -1,0 +1,80 @@
+{% extends 'index.html' %}
+
+{% block body %}
+
+{% include 'request_fleet.html' %}
+
+<table class="table table-hover">
+  <thead class="thead-inverse">
+    <tr>
+      <th>Request ID</th>
+      <th>State</th>
+      <th>Instance type</th>
+      <th>Capacity</th>
+      <th>Max Price</th>
+      <th>Created On</th>
+      <th>Cancel Request</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if not fleet_request_ids %}
+    <tr>
+      <th scope="row" colspan="7">No Request made to Display</th>
+    </tr>
+    {% endif %}
+    {% for r in fleet_request_ids %}
+    <tr class="accordion-toggle"  data-toggle="collapse" data-target="#{{ r['fleet_request_id'] }}">
+      <th scope="row" >{{ r['fleet_request_id'] }}</th>
+      <td>{{ r['fleet_request_state'] }}</td>
+      <td><button type="button" class="btn btn-link">Click</button></td>
+      <td>{{ r['target_capacity'] }}</td>
+      <td>${{ r['spot_price'] }}</td>
+      <td>{{ r['create_time'].strftime('%d %b %Y') }} at {{ r['create_time'].strftime('%H:%M') }}</td>
+      <td>
+        {% if not r['fleet_request_state'].startswith('cancel') %}
+        <form action="/cancel_request/{{ r['SpotFleetRequestId'] }}" method="post">
+          <button type="submit" class="btn btn-alert" style="color: white; background-color: crimson">Cancel</button>
+        </form>
+        {% else %}
+        <button class="btn btn-info" style="cursor:default !important">Cancelled</button>
+        {% endif %}
+      </td>
+    </tr>
+    <tr style="pointer-events: none !important">
+    <td colspan="7">
+        <div id="{{ r['fleet_request_id'] }}" class="collapse in">
+          <p>Displaying Active Running Instances only</p>
+          <table class="table table-hover">
+          <thead class="thead-default">
+              <tr>
+                <th>Instance ID</th>
+                <th>Type</th>
+                <th>RequestId</th>
+                <th>Instance Health</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% if not r['active_instances'] %}
+            <tr>
+            <th scope="row" colspan="4">No Active Instances Running</th>
+            </tr>
+            {% endif %}
+            {% for instance in r['active_instances'] %}
+            <tr>
+              <td> {{ instance['InstanceId'] }} </td>
+              <td> {{ instance['InstanceType'] }} </td>
+              <td> {{ instance['SpotInstanceRequestId'] }} </td>
+              <td> {{ instance['InstanceHealth'] }} </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          </table>
+        </div>
+    </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock %}

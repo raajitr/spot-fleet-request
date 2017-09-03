@@ -1,0 +1,8 @@
+/* Show it is fixed to the top */
+body {
+    min-height: 75rem;
+}
+
+#signed-in{
+    padding-right: .5rem;
+}

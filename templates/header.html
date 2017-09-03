@@ -1,0 +1,25 @@
+
+<nav class="navbar navbar-toggleable-md navbar-light border-top-0" style="background-color: #e8ecf2">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand">Spot Fleet Request</a>
+  <div class="collapse navbar-collapse" id="navbarText">
+		<ul class="navbar-nav mr-auto">
+		<li class="nav-item {% if request.path == "/dashboard/" %} active {% endif %}">
+			<a class="nav-link" href="/dashboard/">Dashboard </a>
+		</li>
+		<li class="nav-item {% if request.path == "/config/" %} active {% endif %}">
+			<a class="nav-link" href="/config/">Config <span class="sr-only">(current)</span></a>
+		</li>
+		</ul>
+        {% if session.logged_in %}
+        <a id="signed-in" class="navbar-brand navbar-right">Signed in as {{ session.username }} </a>
+        <button type="button" class="btn btn-default navbar-btn"><a href="/logout/">Logout</a></button>
+        {% elif request.path == "/login/" %}
+        <button type="button" class="btn btn-default navbar-btn"><a href="/register/">Sign up</a></button>
+        {% elif request.path == "/register/" %}
+        <button type="button" class="btn btn-default navbar-btn"><a href="/login/">Log in</a></button>
+        {% endif %}
+	</div>
+</nav>
