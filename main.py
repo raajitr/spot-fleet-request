@@ -40,6 +40,7 @@ def index():
 @login_required
 def dashboard():
     if 'access_key_id' not in session:
+        flash('You need to add AWS Credentials first')
         return redirect(url_for('config'))
 
     # get request ids using the User's config credentials
