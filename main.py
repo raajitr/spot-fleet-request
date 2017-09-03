@@ -5,8 +5,10 @@ import gc
 from functools import wraps
 from spot_instances import SpotInstantiate
 import instances_defs
+import os
 
 app = Flask(__name__)
+app.secret_key = os.environ["SECRET_KEY"]
 
 app.config['MONGO_DBNAME'] = 'aws_config'
 app.config['MONGO_URI'] = 'mongodb://raajit:alchemist1@ds119524.mlab.com:19524/aws_config'
@@ -144,5 +146,5 @@ def bad_request(e):
     return e
 
 if __name__ == "__main__":
-    app.secret_key = 'secret'
+    app.secret_key = os.environ["SECRET_KEY"]
     app.run(debug=True)
