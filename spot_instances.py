@@ -38,7 +38,7 @@ class SpotInstantiate:
                     }
                 )
 
-        except Exception as e:
+        except ClientError as e:
             return {'error': e}
         return spot_fleet_request
 
