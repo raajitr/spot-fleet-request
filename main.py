@@ -79,7 +79,6 @@ def launch_fleet():
         'instance_type': request.form['instance_type'],
         'fleet_size': int(request.form['fleet_size']),
         'price': request.form['price'],
-        'request_expiration_time': request.form['request_expiration_time'],
         'arn': session['arn'],
         'ami_id': request.form['ami_id']
     }
