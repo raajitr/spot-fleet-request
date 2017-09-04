@@ -33,7 +33,6 @@
       <td>
         {% if not r['fleet_request_state'].startswith('cancel') %}
           <button  class="btn btn-alert" data-toggle="modal" data-target="#delete" style="color: white; background-color: crimson">Cancel</button>
-          {% include 'delete_confirm.html' %}
         {% else %}
         <button class="btn btn-info" style="cursor:default !important">Cancelled</button>
         {% endif %}
@@ -72,6 +71,7 @@
     </td>
     </tr>
     {% endfor %}
+    {% include 'delete_confirm.html' %}
   </tbody>
 </table>
 
