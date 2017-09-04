@@ -39,7 +39,7 @@ class SpotInstantiate:
                 )
 
         except ClientError as e:
-            return {'error': e}
+            return {'error': e.message}
         return spot_fleet_request
 
     def describe_request(self):
@@ -58,7 +58,7 @@ class SpotInstantiate:
             result = sorted(result, key=lambda x: x['create_time'], reverse=True)
             return result
         except Exception as e:
-            return {'error': e}
+            return {'error': e.message}
 
     def describe_fleet_instance(self, request_id):
         try:
@@ -68,7 +68,7 @@ class SpotInstantiate:
             return response['ActiveInstances']
 
         except Exception as e:
-            return {'error': e}
+            return {'error': e.message}
 
     def cancel_request(self, request_id):
         try:
