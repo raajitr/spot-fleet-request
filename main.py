@@ -141,7 +141,7 @@ def login():
             flash(e)
             return redirect(url_for('login'))
             if is_password_matched:
-                session['username'] = request.form['username']
+                session['username'] = request.form['username'].encode('utf-8')
                 session['logged_in'] = True
                 return redirect(url_for('config'))
     return render_template("login.html")
