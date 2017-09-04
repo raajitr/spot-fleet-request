@@ -29,14 +29,12 @@ class SpotInstantiate:
                     'IamFleetRole': fleet_request['arn'],
                     'LaunchSpecifications': [
                         {
-                            'ImageId': 'ami-007a5d65',
+                            'ImageId': fleet_request['ami_id'],
                             'InstanceType': fleet_request['instance_type'],
                         },
                     ],
                     'SpotPrice': fleet_request['price'],
                     'TargetCapacity': fleet_request['fleet_size'],
-                    # 'ValidFrom': datetime(2015, 1, 1),
-                    # 'ValidUntil': datetime(2015, 1, 1),
                     }
                 )
 
