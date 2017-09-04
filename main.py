@@ -133,11 +133,13 @@ def login():
     if request.method == 'POST':
         users = mongo.db.users
         attempted_user = users.find_one({'username': request.form['username']})
-
-        if attempted_user:
-            is_password_matched = bcrypt.hashpw(request.form['password'].encode('utf-8'),
-                                  attempted_user['password'].encode('utf-8')) == attempted_user['password'].encode('utf-8')
-
+        try:
+            if attempted_user:
+                is_password_matched = bcrypt.hashpw(request.form['password'].encode('utf-8'),
+                                    attempted_user['password'].encode('utf-8')) == attempted_user['password'].encode('utf-8')
+        except Exception as e:
+            flash(e)
+            return redirect(url_for('login'))
             if is_password_matched:
                 session['username'] = request.form['username']
                 session['logged_in'] = True
