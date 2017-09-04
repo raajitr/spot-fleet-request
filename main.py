@@ -87,6 +87,7 @@ def launch_fleet():
 
     if 'error' in request_status:
         flash(request_status['error'])
+        return request_status['error']
 
     return redirect(url_for('dashboard'))
 
