@@ -1,9 +1,9 @@
 # Spot Fleet Request
 
-Web app created with Flask to monitor and launch spot fleet request and also to monitor those responses.
+Web app created with Flask to monitor and launch spot fleet request and also to monitor those responses.  
 This was a part of tasks provided by a company.
 
-Database: `MongoDB` hosted on mLabs.com
+Database: `MongoDB` hosted on mLabs.com  
 Frontend: basic `Bootstrap` and `Jinja2 Templating`
 
 Hosted at: [spot-fleet-request.herokuapp.com/](https://spot-fleet-request.herokuapp.com/)
@@ -11,6 +11,7 @@ Hosted at: [spot-fleet-request.herokuapp.com/](https://spot-fleet-request.heroku
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+
 
 ### Prerequisites
 
@@ -50,8 +51,8 @@ Or
 python main.py
 ```
 
-### Acknowledgement
+## Acknowledgement
 
 * [BOTO 3 Documentations](https://boto3.readthedocs.io/en/latest/)
 * [AWS EC2 Spot Documentation](https://aws.amazon.com/ec2/spot/)
-* [Worlds Best WebDev Tool](https://www.google.com)
+* [World's Best WebDev Tool](https://www.google.com)
